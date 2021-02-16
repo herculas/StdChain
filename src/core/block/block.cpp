@@ -1,5 +1,6 @@
+#include "core/block/block.h"
+
 #include <sstream>
-#include "core/block.h"
 
 Block::Block() : header(), checked(false) {
     // TODO: transactions

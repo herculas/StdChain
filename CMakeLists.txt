@@ -5,7 +5,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 include_directories(src)
 
-aux_source_directory(src/core CORE)
+aux_source_directory(src/core/block CORE_BLOCK)
+aux_source_directory(src/core/transaction CORE_TRANS)
 
 aux_source_directory(src/type/blob TYPE_BLOB)
 aux_source_directory(src/type/hash TYPE_HASH)
@@ -19,7 +20,8 @@ aux_source_directory(src/util/serialize UTIL_SERIALIZE)
 add_executable(
         stdchain
         main.cpp
-        ${CORE}
+        ${CORE_BLOCK}
+        ${CORE_TRANS}
         ${TYPE_BLOB}
         ${TYPE_HASH}
         ${TYPE_STREAM}

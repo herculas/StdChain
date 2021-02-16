@@ -1,5 +1,6 @@
-#include "core/block_header.h"
-#include "type/hash/hash_writer.h"
+#include "block_header.h"
+
+#include "util/serialize/hash.h"
 
 BlockHeader::BlockHeader(): version(0), time(0), bits(0), nonce(0) {
     // TODO: Hash previous block
@@ -11,7 +12,7 @@ bool BlockHeader::isNull() const {
 }
 
 Blob256 BlockHeader::getHash() const {
-    return serializeHash(*this);
+    return util::serialize::serializeHash(*this);
 }
 
 int64_t BlockHeader::getBlockTime() const {

@@ -1,7 +1,6 @@
 #ifndef STDCHAIN_TYPE_HASH_SHA256_H
 #define STDCHAIN_TYPE_HASH_SHA256_H
 
-
 #include <cstdint>
 #include <cstdlib>
 

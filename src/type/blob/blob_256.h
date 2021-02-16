@@ -1,11 +1,8 @@
 #ifndef STDCHAIN_TYPE_BLOB_256_H
 #define STDCHAIN_TYPE_BLOB_256_H
 
-#include "base_blob.h"
+#include "type/blob/base_blob.h"
 
-/**
- * 256-bit opaque blob.
- */
 class Blob256 : public BaseBlob<256> {
 
 public:

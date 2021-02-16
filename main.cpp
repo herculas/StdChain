@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "core/block.h"
+#include "core/block/block.h"
 
 int main() {
     Block block{};

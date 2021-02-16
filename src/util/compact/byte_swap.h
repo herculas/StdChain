@@ -1,7 +1,6 @@
 #ifndef STDCHAIN_UTIL_COMPACT_BYTE_SWAP_H
 #define STDCHAIN_UTIL_COMPACT_BYTE_SWAP_H
 
-
 #include <cstdint>
 
 namespace util::compact {

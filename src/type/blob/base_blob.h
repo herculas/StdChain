@@ -2,18 +2,8 @@
 #define STDCHAIN_TYPE_BLOB_BASE_BLOB_H
 
 #include <string>
-
 #include "util/encode/string_encoding.h"
 
-/**
- * @details
- * Template base class for fixed-sized opaque blobs.
- *
- * @details
- * 定長數據塊基礎模板類定義。
- *
- * @tparam BITS     size of blobs
- */
 template<unsigned int BITS>
 class BaseBlob {
 

@@ -1,19 +1,16 @@
 #ifndef STDCHAIN_CORE_BLOCK_H
 #define STDCHAIN_CORE_BLOCK_H
 
-#include "core/block_header.h"
-
 #include <string>
+#include <vector>
+#include "block_header.h"
+#include "core/transaction/transaction.h"
 
 class Block {
 
 public:
     BlockHeader header;
-
-    // network and disk, 在網路中分發並存儲於磁碟中
-    // TODO: transactions vector
-
-    // memory only, 僅存儲於記憶體中
+    std::vector<Transaction> vTx;
     mutable bool checked;
 
 public:

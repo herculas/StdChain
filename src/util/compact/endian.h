@@ -1,9 +1,7 @@
 #ifndef STDCHAIN_UTIL_COMPACT_ENDIAN_H
 #define STDCHAIN_UTIL_COMPACT_ENDIAN_H
 
-
 #include <cstdint>
-
 #include "util/compact/byte_swap.h"
 
 namespace util::compact {
