@@ -1,10 +1,11 @@
-#ifndef STDCHAIN_UTIL_HASH_HASH_WRITER_H
-#define STDCHAIN_UTIL_HASH_HASH_WRITER_H
+#ifndef STDCHAIN_TYPE_HASH_WRITER_H
+#define STDCHAIN_TYPE_HASH_WRITER_H
 
 #include "config/version.h"
-#include "type/blob_256.h"
-#include "util/encode/serialize.h"
-#include "util/hash/sha256.h"
+#include "type/blob/blob_256.h"
+#include "sha256.h"
+#include "util/serialize/config.h"
+#include "util/serialize/serialize.h"
 
 class HashWriter {
 
@@ -28,16 +29,16 @@ public:
 };
 
 template<typename T>
-HashWriter &HashWriter::operator<<(const T &obj) {
-    ::Serialize(*this, obj);
+HashWriter &HashWriter::operator<<(const T &object) {
+    object.serialize(*this);
     return *this;
 }
 
 template<typename T>
-Blob256 serializeHash(const T& obj, int type=SER_GETHASH, int version=PROTOCOL_VERSION) {
+Blob256 serializeHash(const T& obj, int type=util::serialize::SER_GETHASH, int version=config::PROTOCOL_VERSION) {
     HashWriter ss(type, version);
     ss << obj;
     return ss.getHash();
 }
 
-#endif //STDCHAIN_UTIL_HASH_HASH_WRITER_H
+#endif //STDCHAIN_TYPE_HASH_WRITER_H

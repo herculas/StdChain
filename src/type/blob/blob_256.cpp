@@ -1,4 +1,4 @@
-#include "type/blob_256.h"
+#include "blob_256.h"
 
 Blob256::Blob256() = default;
 

@@ -4,8 +4,8 @@
 
 #include <vector>
 
-#include "type/blob_256.h"
-#include "util/encode/serialize.h"
+#include "type/blob/blob_256.h"
+#include "util/serialize/serialize.h"
 
 /**
  * @par
@@ -40,8 +40,16 @@ public:
     [[nodiscard]] int64_t getBlockTime() const;
 
 public:
-    SERIALIZE_METHODS(BlockHeader, obj) {
-        READWRITE(obj.version, obj.hashPrevBlock, obj.hashMerkleRoot, obj.time, obj.bits, obj.nonce);
+    template<typename Stream>
+    void serialize(Stream &stream) const {
+        static_assert(std::is_same<const BlockHeader &, decltype(*this)>::value, "serialize type mismatch");
+        util::serialize::serializeMany(stream,
+                                       this->version,
+                                       this->hashPrevBlock,
+                                       this->hashMerkleRoot,
+                                       this->time,
+                                       this->bits,
+                                       this->nonce);
     }
 
 };

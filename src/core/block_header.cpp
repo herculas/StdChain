@@ -1,5 +1,5 @@
 #include "core/block_header.h"
-#include "util/hash/hash_writer.h"
+#include "type/hash/hash_writer.h"
 
 BlockHeader::BlockHeader(): version(0), time(0), bits(0), nonce(0) {
     // TODO: Hash previous block

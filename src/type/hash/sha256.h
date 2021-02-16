@@ -1,5 +1,5 @@
-#ifndef STDCHAIN_UTIL_HASH_SHA256_H
-#define STDCHAIN_UTIL_HASH_SHA256_H
+#ifndef STDCHAIN_TYPE_HASH_SHA256_H
+#define STDCHAIN_TYPE_HASH_SHA256_H
 
 
 #include <cstdint>
@@ -24,4 +24,4 @@ public:
 };
 
 
-#endif //STDCHAIN_UTIL_HASH_SHA256_H
+#endif //STDCHAIN_TYPE_HASH_SHA256_H

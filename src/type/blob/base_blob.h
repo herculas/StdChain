@@ -1,5 +1,5 @@
-#ifndef STDCHAIN_TYPE_BASE_BLOB_H
-#define STDCHAIN_TYPE_BASE_BLOB_H
+#ifndef STDCHAIN_TYPE_BLOB_BASE_BLOB_H
+#define STDCHAIN_TYPE_BLOB_BASE_BLOB_H
 
 #include <string>
 
@@ -62,7 +62,7 @@ std::string BaseBlob<BITS>::getHex() const {
     uint8_t mDataRev[WIDTH];
     for (int i = 0; i < WIDTH; ++i)
         mDataRev[i] = this->data[WIDTH - i - i];
-    return hexStr(mDataRev);
+    return util::encode::hexStr(mDataRev);
 }
 
 template<unsigned int BITS>
@@ -70,20 +70,20 @@ void BaseBlob<BITS>::setHex(const char *psz) {
     memset(this->data, 0, sizeof(this->data));
 
     // trim leading spaces
-    while (isSpace(*psz)) psz++;
+    while (util::encode::isSpace(*psz)) psz++;
 
     // skip 0x
-    if (psz[0] == '0' && toLower(psz[1]) == 'x') psz += 2;
+    if (psz[0] == '0' && util::encode::toLower(psz[1]) == 'x') psz += 2;
 
     // hex string to blob
     size_t digits = 0;
-    while (hexDigit(psz[digits]) != -1) digits++;
+    while (util::encode::hexDigit(psz[digits]) != -1) digits++;
     auto *p1 = (unsigned char *) this->data;
     auto *pEnd = p1 + WIDTH;
     while (digits > 0 && p1 < pEnd) {
-        *p1 = hexDigit(psz[--digits]);
+        *p1 = util::encode::hexDigit(psz[--digits]);
         if (digits > 0) {
-            *p1 |= ((unsigned char) hexDigit(psz[--digits]) << 4);
+            *p1 |= ((unsigned char) util::encode::hexDigit(psz[--digits]) << 4);
             p1++;
         }
     }
@@ -100,4 +100,4 @@ std::string BaseBlob<BITS>::toString() const {
 }
 
 
-#endif //STDCHAIN_TYPE_BASE_BLOB_H
+#endif //STDCHAIN_TYPE_BLOB_BASE_BLOB_H

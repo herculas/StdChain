@@ -1,7 +1,3 @@
-//
-// Created by 宋睿 on 12/2/2021.
-//
-
 #include <sstream>
 #include "core/block.h"
 

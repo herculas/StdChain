@@ -1,4 +1,4 @@
-#include "util/hash/sha256.h"
+#include "sha256.h"
 
 #include <cstring>
 
@@ -44,22 +44,22 @@ namespace {
                 uint32_t a = s[0], b = s[1], c = s[2], d = s[3], e = s[4], f = s[5], g = s[6], h = s[7];
                 uint32_t w0, w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13, w14, w15;
 
-                Round(a, b, c, d, e, f, g, h, 0x428a2f98 + (w0 = ReadBE32(chunk + 0)));
-                Round(h, a, b, c, d, e, f, g, 0x71374491 + (w1 = ReadBE32(chunk + 4)));
-                Round(g, h, a, b, c, d, e, f, 0xb5c0fbcf + (w2 = ReadBE32(chunk + 8)));
-                Round(f, g, h, a, b, c, d, e, 0xe9b5dba5 + (w3 = ReadBE32(chunk + 12)));
-                Round(e, f, g, h, a, b, c, d, 0x3956c25b + (w4 = ReadBE32(chunk + 16)));
-                Round(d, e, f, g, h, a, b, c, 0x59f111f1 + (w5 = ReadBE32(chunk + 20)));
-                Round(c, d, e, f, g, h, a, b, 0x923f82a4 + (w6 = ReadBE32(chunk + 24)));
-                Round(b, c, d, e, f, g, h, a, 0xab1c5ed5 + (w7 = ReadBE32(chunk + 28)));
-                Round(a, b, c, d, e, f, g, h, 0xd807aa98 + (w8 = ReadBE32(chunk + 32)));
-                Round(h, a, b, c, d, e, f, g, 0x12835b01 + (w9 = ReadBE32(chunk + 36)));
-                Round(g, h, a, b, c, d, e, f, 0x243185be + (w10 = ReadBE32(chunk + 40)));
-                Round(f, g, h, a, b, c, d, e, 0x550c7dc3 + (w11 = ReadBE32(chunk + 44)));
-                Round(e, f, g, h, a, b, c, d, 0x72be5d74 + (w12 = ReadBE32(chunk + 48)));
-                Round(d, e, f, g, h, a, b, c, 0x80deb1fe + (w13 = ReadBE32(chunk + 52)));
-                Round(c, d, e, f, g, h, a, b, 0x9bdc06a7 + (w14 = ReadBE32(chunk + 56)));
-                Round(b, c, d, e, f, g, h, a, 0xc19bf174 + (w15 = ReadBE32(chunk + 60)));
+                Round(a, b, c, d, e, f, g, h, 0x428a2f98 + (w0 = util::hash::ReadBE32(chunk + 0)));
+                Round(h, a, b, c, d, e, f, g, 0x71374491 + (w1 = util::hash::ReadBE32(chunk + 4)));
+                Round(g, h, a, b, c, d, e, f, 0xb5c0fbcf + (w2 = util::hash::ReadBE32(chunk + 8)));
+                Round(f, g, h, a, b, c, d, e, 0xe9b5dba5 + (w3 = util::hash::ReadBE32(chunk + 12)));
+                Round(e, f, g, h, a, b, c, d, 0x3956c25b + (w4 = util::hash::ReadBE32(chunk + 16)));
+                Round(d, e, f, g, h, a, b, c, 0x59f111f1 + (w5 = util::hash::ReadBE32(chunk + 20)));
+                Round(c, d, e, f, g, h, a, b, 0x923f82a4 + (w6 = util::hash::ReadBE32(chunk + 24)));
+                Round(b, c, d, e, f, g, h, a, 0xab1c5ed5 + (w7 = util::hash::ReadBE32(chunk + 28)));
+                Round(a, b, c, d, e, f, g, h, 0xd807aa98 + (w8 = util::hash::ReadBE32(chunk + 32)));
+                Round(h, a, b, c, d, e, f, g, 0x12835b01 + (w9 = util::hash::ReadBE32(chunk + 36)));
+                Round(g, h, a, b, c, d, e, f, 0x243185be + (w10 = util::hash::ReadBE32(chunk + 40)));
+                Round(f, g, h, a, b, c, d, e, 0x550c7dc3 + (w11 = util::hash::ReadBE32(chunk + 44)));
+                Round(e, f, g, h, a, b, c, d, 0x72be5d74 + (w12 = util::hash::ReadBE32(chunk + 48)));
+                Round(d, e, f, g, h, a, b, c, 0x80deb1fe + (w13 = util::hash::ReadBE32(chunk + 52)));
+                Round(c, d, e, f, g, h, a, b, 0x9bdc06a7 + (w14 = util::hash::ReadBE32(chunk + 56)));
+                Round(b, c, d, e, f, g, h, a, 0xc19bf174 + (w15 = util::hash::ReadBE32(chunk + 60)));
 
                 Round(a, b, c, d, e, f, g, h, 0xe49b69c1 + (w0 += sigma1(w14) + w9 + sigma0(w1)));
                 Round(h, a, b, c, d, e, f, g, 0xefbe4786 + (w1 += sigma1(w15) + w10 + sigma0(w2)));
@@ -156,17 +156,17 @@ SHA256 &SHA256::write(const unsigned char *data, size_t len) {
 void SHA256::finalize(unsigned char hash[OUTPUT_SIZE]) {
     static const unsigned char pad[64] = {0x80};
     unsigned char sizeDesc[8];
-    WriteBE64(sizeDesc, bytes << 3);
+    util::hash::WriteBE64(sizeDesc, bytes << 3);
     this->write(pad, 1 + ((119 - (bytes % 64)) % 64));
     this->write(sizeDesc, 8);
-    WriteBE32(hash, s[0]);
-    WriteBE32(hash + 4, s[1]);
-    WriteBE32(hash + 8, s[2]);
-    WriteBE32(hash + 12, s[3]);
-    WriteBE32(hash + 16, s[4]);
-    WriteBE32(hash + 20, s[5]);
-    WriteBE32(hash + 24, s[6]);
-    WriteBE32(hash + 28, s[7]);
+    util::hash::WriteBE32(hash, s[0]);
+    util::hash::WriteBE32(hash + 4, s[1]);
+    util::hash::WriteBE32(hash + 8, s[2]);
+    util::hash::WriteBE32(hash + 12, s[3]);
+    util::hash::WriteBE32(hash + 16, s[4]);
+    util::hash::WriteBE32(hash + 20, s[5]);
+    util::hash::WriteBE32(hash + 24, s[6]);
+    util::hash::WriteBE32(hash + 28, s[7]);
 }
 
 SHA256 &SHA256::reset() {

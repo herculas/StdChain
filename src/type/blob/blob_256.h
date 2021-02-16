@@ -1,7 +1,7 @@
 #ifndef STDCHAIN_TYPE_BLOB_256_H
 #define STDCHAIN_TYPE_BLOB_256_H
 
-#include "type/base_blob.h"
+#include "base_blob.h"
 
 /**
  * 256-bit opaque blob.
@@ -16,19 +16,19 @@ public:
     unsigned char *end();
 
     template<typename Stream>
-    void Serialize(Stream &stream) const;
+    void serialize(Stream &stream) const;
 
     template<typename Stream>
-    void Unserialize(Stream &stream);
+    void deserialize(Stream &stream);
 };
 
 template<typename Stream>
-void Blob256::Serialize(Stream &stream) const {
+void Blob256::serialize(Stream &stream) const {
     stream.write((char *) this->data, sizeof(this->data));
 }
 
 template<typename Stream>
-void Blob256::Unserialize(Stream &stream) {
+void Blob256::deserialize(Stream &stream) {
     stream.read((char *) this->data, sizeof(this->data));
 }
 

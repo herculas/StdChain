@@ -1,6 +1,6 @@
-#include "util/encode/serialize.h"
+#include "util/serialize/serialize.h"
 #include "util/hash/common.h"
-#include "util/hash/hash_writer.h"
+#include "hash_writer.h"
 
 HashWriter::HashWriter(int type, int version): type(type), version(version) {}
 
@@ -31,5 +31,5 @@ Blob256 HashWriter::getSHA256() {
 
 uint64_t HashWriter::getCheapHash() {
     Blob256 result = this->getHash();
-    return ReadLE64(result.begin());
+    return util::hash::ReadLE64(result.begin());
 }

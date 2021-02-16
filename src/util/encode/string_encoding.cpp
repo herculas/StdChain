@@ -1,6 +1,6 @@
 #include "util/encode/string_encoding.h"
 
-signed char hexDigit(char c) {
+signed char util::encode::hexDigit(char c) {
     const signed char utilHexDigit[256] = {
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
             -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -22,22 +22,22 @@ signed char hexDigit(char c) {
     return utilHexDigit[static_cast<unsigned char>(c)];
 }
 
-bool isHex(const std::string &str) {
+bool util::encode::isHex(const std::string &str) {
     for (char c : str)
         if (hexDigit(c) < 0)
             return false;
     return !str.empty() && str.size() % 2 == 0;
 }
 
-bool isDigit(char c) {
+bool util::encode::isDigit(char c) {
     return c >= '0' && c <= '9';
 }
 
-bool isSpace(char c) noexcept {
+bool util::encode::isSpace(char c) noexcept {
     return c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v';
 }
 
-std::string hexStr(std::span<uint8_t> s) {
+std::string util::encode::hexStr(std::span<uint8_t> s) {
     std::string res;
     static constexpr char hexMap[16] = {
             '0', '1', '2', '3',
@@ -53,27 +53,27 @@ std::string hexStr(std::span<uint8_t> s) {
     return res;
 }
 
-char toLower(char c) {
+char util::encode::toLower(char c) {
     return c >= 'A' && c <= 'Z' ? static_cast<char>(static_cast<int>(c) + 32) : c;
 }
 
-std::string toLower(const std::string &str) {
+std::string util::encode::toLower(const std::string &str) {
     std::string res;
     for (char c : str) res += toLower(c);
     return res;
 }
 
-char toUpper(char c) {
+char util::encode::toUpper(char c) {
     return c >= 'a' && c <= 'z' ? static_cast<char>(static_cast<int>(c) + 32) : c;
 }
 
-std::string toUpper(const std::string &str) {
+std::string util::encode::toUpper(const std::string &str) {
     std::string res;
     for (char c : str) res += toUpper(c);
     return res;
 }
 
-std::string capitalize(std::string &str) {
+std::string util::encode::capitalize(std::string &str) {
     if (str.empty()) return str;
     str[0] = toUpper(str.front());
     return str;
