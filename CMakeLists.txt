@@ -7,6 +7,7 @@ include_directories(src)
 
 aux_source_directory(src/core/block CORE_BLOCK)
 aux_source_directory(src/core/transaction CORE_TRANS)
+aux_source_directory(src/core/script CORE_SCRIPT)
 
 aux_source_directory(src/type/blob TYPE_BLOB)
 aux_source_directory(src/type/hash TYPE_HASH)
@@ -22,6 +23,7 @@ add_executable(
         main.cpp
         ${CORE_BLOCK}
         ${CORE_TRANS}
+        ${CORE_SCRIPT}
         ${TYPE_BLOB}
         ${TYPE_HASH}
         ${TYPE_STREAM}

@@ -1,7 +1,10 @@
 #ifndef STDCHAIN_CORE_TRANSACTION_IN_H
 #define STDCHAIN_CORE_TRANSACTION_IN_H
 
+#include "core/script/script.h"
+#include "core/script/script_witness.h"
 #include "core/transaction/trans_out_point.h"
+#include "type/blob/blob_256.h"
 
 class TxIn {
 
@@ -13,13 +16,22 @@ public:
     static const uint32_t SEQUENCE_LOCKTIME_GRANULARITY = 9;
 
 public:
-    OutPoint preVout;
+    OutPoint prevOut;
     uint32_t sequence;
-    // TODO: Script: scriptSig
-    // TODO: ScriptWitness: scriptWitness
+    Script scriptSig;
+    ScriptWitness scriptWitness;
 
 public:
-    TxIn();
+    explicit TxIn(OutPoint prevOut, Script scriptSig = Script(), uint32_t sequence = TxIn::SEQUENCE_FINAL);
+    TxIn(Blob256 hashPrevTx, uint32_t out, Script scriptSig = Script(), uint32_t sequence = TxIn::SEQUENCE_FINAL);
+
+    [[nodiscard]] std::string toString() const;
+
+    // TODO: serialize
+
+    friend bool operator==(const TxIn &a, const TxIn &b);
+    friend bool operator!=(const TxIn &a, const TxIn &b);
+
 };
 
 

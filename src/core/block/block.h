@@ -10,7 +10,7 @@ class Block {
 
 public:
     BlockHeader header;
-    std::vector<Transaction> vTx;
+    std::vector<TransactionRef> vTx;
     mutable bool checked;
 
 public:

@@ -1,8 +1,11 @@
 #include "core/transaction/transaction.h"
 
+#include <stdexcept>
+#include <string>
 #include "config/version.h"
-#include "util/serialize/hash.h"
 #include "util/serialize/config.h"
+#include "util/serialize/hash.h"
+#include "util/serialize/transaction.h"
 
 Transaction::Transaction(const MutableTransaction &mTx) : version(mTx.version), lockTime(mTx.lockTime), vin(mTx.vin),
                                                           vout(mTx.vout), hash{this->computeHash()},
@@ -12,11 +15,6 @@ Transaction::Transaction(const MutableTransaction &mTx) : version(mTx.version), 
 Transaction::Transaction(MutableTransaction &&mTx) : version(mTx.version), lockTime(mTx.lockTime), vin(mTx.vin),
                                                      vout(mTx.vout), hash{this->computeHash()},
                                                      witnessHash(this->computeWitnessHash()) {
-}
-
-template<typename Stream>
-void Transaction::serialize(Stream &stream) const {
-
 }
 
 bool Transaction::isNull() const {
@@ -31,9 +29,42 @@ const Blob256 &Transaction::getWitnessHash() const {
     return this->witnessHash;
 }
 
+unsigned int Transaction::getTotalSize() const {
+    // TODO: get serialize size
+    return 0;
+}
+
+bool Transaction::isCoinbase() const {
+    return this->vin.size() == 1 && this->vin[0].prevOut.isNull();
+}
+
+std::string Transaction::toString() const {
+    // TODO: str printf
+    return std::string();
+}
+
+Amount Transaction::getValueOut() const {
+    Amount valueOut = 0;
+    for (const auto &out : vout) {
+        if (!config::amount::moneyRange(out.value) || !config::amount::moneyRange(valueOut + out.value))
+            throw std::runtime_error(std::string(__func__) + ": value out of range.");
+        valueOut += out.value;
+    }
+    assert(config::amount::moneyRange(valueOut));
+    return valueOut;
+}
+
+bool Transaction::hasWitness() const {
+    for (const auto &in : this->vin) { // NOLINT(readability-use-anyofallof)
+        if (!in.scriptWitness.isNull())
+            return true;
+    }
+    return false;
+}
+
 Blob256 Transaction::computeHash() const {
     return util::serialize::serializeHash(*this, util::serialize::SER_GETHASH,
-                                          config::SERIALIZE_TRANSACTION_NO_WITNESS);
+                                          config::version::SERIALIZE_TRANSACTION_NO_WITNESS);
 }
 
 Blob256 Transaction::computeWitnessHash() const {
@@ -42,22 +73,15 @@ Blob256 Transaction::computeWitnessHash() const {
     return util::serialize::serializeHash(*this, util::serialize::SER_GETHASH, 0);
 }
 
-unsigned int Transaction::getTotalSize() const {
-    return 0;
+bool operator==(const Transaction &a, const Transaction &b) {
+    return a.hash == b.hash;
 }
 
-bool Transaction::isCoinbase() const {
-    // TODO: return this->vin.size() == 1 && this->vin[0];
-    return false;
+bool operator!=(const Transaction &a, const Transaction &b) {
+    return a.hash != b.hash;
 }
 
-std::string Transaction::toString() const {
-    // TODO
-    return std::string();
+template<typename Stream>
+void Transaction::serialize(Stream &stream) const {
+    util::serialize::serializeTransaction(*this, stream);
 }
-
-bool Transaction::hasWitness() const {
-    // TODO
-    return false;
-}
-

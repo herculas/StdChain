@@ -3,8 +3,8 @@
 #include "util/serialize/hash.h"
 
 BlockHeader::BlockHeader(): version(0), time(0), bits(0), nonce(0) {
-    // TODO: Hash previous block
-    // TODO: Hash Merkle root
+    this->hashPrevBlock.setNull();
+    this->hashMerkleRoot.setNull();
 }
 
 bool BlockHeader::isNull() const {

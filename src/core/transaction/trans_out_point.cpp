@@ -16,3 +16,16 @@ std::string OutPoint::toString() const {
     // TODO
     return this->hash.toString();
 }
+
+bool operator<(const OutPoint &a, const OutPoint &b) {
+    int cmp = a.hash.compare(b.hash);
+    return cmp < 0 || (cmp == 0 && a.n < b.n);
+}
+
+bool operator==(const OutPoint &a, const OutPoint &b) {
+    return a.hash == b.hash && a.n == b.n;
+}
+
+bool operator!=(const OutPoint &a, const OutPoint &b) {
+    return !(a == b);
+}
