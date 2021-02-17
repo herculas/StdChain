@@ -37,7 +37,7 @@ bool util::encode::isSpace(char c) noexcept {
     return c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v';
 }
 
-std::string util::encode::hexStr(std::span<uint8_t> s) {
+std::string util::encode::hexStr(std::span<uint8_t> span) {
     std::string res;
     static constexpr char hexMap[16] = {
             '0', '1', '2', '3',
@@ -45,8 +45,24 @@ std::string util::encode::hexStr(std::span<uint8_t> s) {
             '8', '9', 'a', 'b',
             'c', 'd', 'e', 'f'
     };
-    res.reserve(s.size() * 2);
-    for (uint8_t v : s) {
+    res.reserve(span.size() * 2);
+    for (uint8_t v : span) {
+        res.push_back(hexMap[v >> 4]);
+        res.push_back(hexMap[v & 15]);
+    }
+    return res;
+}
+
+std::string util::encode::hexStr(const std::vector<uint8_t>& vector) {
+    std::string res;
+    static constexpr char hexMap[16] = {
+            '0', '1', '2', '3',
+            '4', '5', '6', '7',
+            '8', '9', 'a', 'b',
+            'c', 'd', 'e', 'f'
+    };
+    res.reserve(vector.size() * 2);
+    for (uint8_t v : vector) {
         res.push_back(hexMap[v >> 4]);
         res.push_back(hexMap[v & 15]);
     }

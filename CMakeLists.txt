@@ -15,6 +15,7 @@ aux_source_directory(src/type/stream TYPE_STREAM)
 
 aux_source_directory(src/util/compact UTIL_COMPACT)
 aux_source_directory(src/util/encode UTIL_ENCODE)
+aux_source_directory(src/util/format UTIL_FMT)
 aux_source_directory(src/util/hash UTIL_HASH)
 aux_source_directory(src/util/serialize UTIL_SERIALIZE)
 
@@ -29,6 +30,7 @@ add_executable(
         ${TYPE_STREAM}
         ${UTIL_COMPACT}
         ${UTIL_ENCODE}
+        ${UTIL_FMT}
         ${UTIL_HASH}
         ${UTIL_SERIALIZE}
 )

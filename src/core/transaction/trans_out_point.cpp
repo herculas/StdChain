@@ -1,4 +1,5 @@
 #include "core/transaction/trans_out_point.h"
+#include "util/format/tinyformat.h"
 
 OutPoint::OutPoint(): n(OutPoint::NULL_INDEX) {}
 OutPoint::OutPoint(const Blob256 &hash, uint32_t n):hash(hash), n(n) {}
@@ -13,8 +14,7 @@ bool OutPoint::isNull() const {
 }
 
 std::string OutPoint::toString() const {
-    // TODO
-    return this->hash.toString();
+    return strprintf("OutPoint(%s, %u)", this->hash.toString().substr(0, 10), this->n);
 }
 
 bool operator<(const OutPoint &a, const OutPoint &b) {

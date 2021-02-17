@@ -3,11 +3,11 @@
 #include <sstream>
 
 Block::Block() : header(), checked(false) {
-    // TODO: transactions
+    this->vTx.clear();
 }
 
-Block::Block(const BlockHeader &header) : header(), checked(false) {
-    // TODO: transactions
+Block::Block(const BlockHeader &header) : header(header), checked(false) {
+    this->vTx.clear();
 }
 
 BlockHeader Block::getHeader() const {
