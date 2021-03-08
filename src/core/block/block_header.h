@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "type/blob/blob_256.h"
-#include "util/serialize/serialize.h"
 
 class BlockHeader {
 
@@ -23,18 +22,14 @@ public:
 
 public:
     template<typename Stream>
-    void serialize(Stream &stream) const {
-        static_assert(std::is_same<const BlockHeader &, decltype(*this)>::value, "serialize type mismatch");
-        util::serialize::serializeMany(stream,
-                                       this->version,
-                                       this->hashPrevBlock,
-                                       this->hashMerkleRoot,
-                                       this->time,
-                                       this->bits,
-                                       this->nonce);
-    }
+    void serialize(Stream &stream) const;
 
 };
 
+template<typename Stream>
+void BlockHeader::serialize(Stream &stream) const {
+    // TODO
+    static_assert(std::is_same<const BlockHeader &, decltype(*this)>::value, "serialize type mismatch");
+}
 
 #endif //STDCHAIN_CORE_BLOCK_HEADER_H

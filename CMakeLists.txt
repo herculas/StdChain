@@ -1,36 +1,28 @@
 cmake_minimum_required(VERSION 3.17)
 project(stdchain)
 
+# Conan packages
+if (EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    conan_basic_setup()
+else()
+    message(WARNING "The file conanbuildinfo.cmake does not exist, run conan install first.")
+endif ()
+
 set(CMAKE_CXX_STANDARD 20)
 
 include_directories(src)
 
 aux_source_directory(src/core/block CORE_BLOCK)
-aux_source_directory(src/core/transaction CORE_TRANS)
-aux_source_directory(src/core/script CORE_SCRIPT)
-
 aux_source_directory(src/type/blob TYPE_BLOB)
-aux_source_directory(src/type/hash TYPE_HASH)
-aux_source_directory(src/type/stream TYPE_STREAM)
-
-aux_source_directory(src/util/compact UTIL_COMPACT)
-aux_source_directory(src/util/encode UTIL_ENCODE)
-aux_source_directory(src/util/format UTIL_FMT)
-aux_source_directory(src/util/hash UTIL_HASH)
-aux_source_directory(src/util/serialize UTIL_SERIALIZE)
 
 add_executable(
         stdchain
         main.cpp
         ${CORE_BLOCK}
-        ${CORE_TRANS}
-        ${CORE_SCRIPT}
         ${TYPE_BLOB}
-        ${TYPE_HASH}
-        ${TYPE_STREAM}
-        ${UTIL_COMPACT}
-        ${UTIL_ENCODE}
-        ${UTIL_FMT}
-        ${UTIL_HASH}
-        ${UTIL_SERIALIZE}
 )
+
+# openssl import
+find_package(OpenSSL REQUIRED)
+target_link_libraries(stdchain OpenSSL::SSL)

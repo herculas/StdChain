@@ -28,7 +28,7 @@ public:
 
 template<typename T>
 HashWriter &HashWriter::operator<<(const T &object) {
-    object.serialize(*this);
+    util::serialize::serialize(*this, object);
     return *this;
 }
 

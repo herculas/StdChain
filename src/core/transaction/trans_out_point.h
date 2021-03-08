@@ -2,6 +2,7 @@
 #define STDCHAIN_CORE_TRANSACTION_OUT_POINT_H
 
 #include "type/blob/blob_256.h"
+#include "util/serialize/serialize.h"
 
 class OutPoint {
 
@@ -20,7 +21,8 @@ public:
     [[nodiscard]] bool isNull() const;
     [[nodiscard]] std::string toString() const;
 
-    // TODO: serialize
+    template<typename Stream>
+    void serialize(Stream &stream) const;
 
     friend bool operator<(const OutPoint &a, const OutPoint &b);
     friend bool operator==(const OutPoint &a, const OutPoint &b);
@@ -28,5 +30,12 @@ public:
 
 };
 
+template<typename Stream>
+void OutPoint::serialize(Stream &stream) const {
+    static_assert(std::is_same<const OutPoint&, decltype(*this)>::value, "Serialize type mismatch");
+    util::serialize::serializeMany(stream,
+                                   this->hash,
+                                   this->n);
+}
 
 #endif //STDCHAIN_CORE_TRANSACTION_OUT_POINT_H

@@ -1,10 +1,12 @@
 #ifndef STDCHAIN_CORE_TRANSACTION_IN_H
 #define STDCHAIN_CORE_TRANSACTION_IN_H
 
+#include <string>
 #include "core/script/script.h"
 #include "core/script/script_witness.h"
 #include "core/transaction/trans_out_point.h"
 #include "type/blob/blob_256.h"
+#include "util/serialize/serialize.h"
 
 class TxIn {
 
@@ -22,17 +24,27 @@ public:
     ScriptWitness scriptWitness;
 
 public:
+    TxIn();
     explicit TxIn(OutPoint prevOut, Script scriptSig = Script(), uint32_t sequence = TxIn::SEQUENCE_FINAL);
     TxIn(Blob256 hashPrevTx, uint32_t out, Script scriptSig = Script(), uint32_t sequence = TxIn::SEQUENCE_FINAL);
 
     [[nodiscard]] std::string toString() const;
 
-    // TODO: serialize
+    template<typename Stream>
+    void serialize(Stream &stream) const;
 
     friend bool operator==(const TxIn &a, const TxIn &b);
     friend bool operator!=(const TxIn &a, const TxIn &b);
 
 };
 
+template<typename Stream>
+void TxIn::serialize(Stream &stream) const {
+    static_assert(std::is_same<const TxIn&, decltype(*this)>::value, "Serialize type mismatch");
+    util::serialize::serializeMany(stream,
+                                   this->prevOut,
+                                   this->scriptSig,
+                                   this->sequence);
+}
 
 #endif //STDCHAIN_CORE_TRANSACTION_IN_H

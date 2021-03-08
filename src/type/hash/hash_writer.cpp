@@ -1,6 +1,5 @@
 #include "type/hash/hash_writer.h"
 
-#include "util/serialize/serialize.h"
 #include "util/hash/common.h"
 
 HashWriter::HashWriter(int type, int version): type(type), version(version) {}

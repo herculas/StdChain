@@ -7,7 +7,9 @@
 #include <string>
 #include <type_traits>
 #include <vector>
-
+#include "type/stream/wrapper.h"
+#include "type/stream/vector_formatter.h"
+#include "type/stream/default_formatter.h"
 #include "util/serialize/char_cast.h"
 #include "util/serialize/compact_size.h"
 #include "util/serialize/low_level_conversion.h"
@@ -97,10 +99,28 @@ namespace util::serialize {
             stream.write((char *) string.data(), string.size() * sizeof(C));
     }
 
-//    template<typename Stream, typename T, typename A>
-//    void serialize(Stream &stream, const std::vector<T, A> &vector) {
-//
-//    }
+    template<typename Stream, typename T, typename A>
+    void vectorSerializeImpl(Stream &stream, const std::vector<T, A> &vector, const unsigned char &) {
+        writeCompactSize(stream, vector.size());
+        if (!vector.empty())
+            stream.write((char *) vector.data(), vector.size() * sizeof(T));
+    }
+
+    template<typename Stream, typename T, typename A>
+    void vectorSerializeImpl(Stream &stream, const std::vector<T, A> &vector, const bool &) {
+        writeCompactSize(stream, vector.size());
+        for (bool element: vector) serialize(stream, element);
+    }
+
+    template<typename Stream, typename T, typename A, typename V>
+    void vectorSerializeImpl(Stream &stream, const std::vector<T, A> &vector, const V &) {
+        serialize(stream, usingWrapper<VectorFormatter<DefaultFormatter>>(vector));
+    }
+
+    template<typename Stream, typename T, typename A>
+    inline void serialize(Stream &stream, const std::vector<T, A> &vector) {
+        vectorSerializeImpl(stream, vector, T());
+    }
 
     template<typename Stream, typename K, typename T>
     void serialize(Stream &stream, const std::pair<K, T> &pair) {

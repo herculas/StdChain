@@ -41,15 +41,15 @@ bool Transaction::isCoinbase() const {
 
 std::string Transaction::toString() const {
     std::string str;
-    str += strprintf("Transaction(hash=%s, ver=%d, vin.size=%u, vout.size=%u, locktime=%u)\n",
+    str += strprintf("Transaction(hash=%s, version=%d, vin.size=%u, vout.size=%u, locktime=%u)\n",
                      this->getHash().toString().substr(0, 10),
                      this->version,
                      this->vin.size(),
                      this->vout.size(),
                      this->lockTime);
-    for (const auto &in : this->vin) str += "  " + in.toString() + "\n";
-    for (const auto &in : this->vin) str += "  " + in.scriptWitness.toString() + "\n";
-    for (const auto &out : this->vout) str += "  " + out.toString() + "\n";
+    for (const auto &in : this->vin) str += "        " + in.toString() + "\n";
+    for (const auto &in : this->vin) str += "        " + in.scriptWitness.toString() + "\n";
+    for (const auto &out : this->vout) str += "        " + out.toString() + "\n";
     return str;
 }
 

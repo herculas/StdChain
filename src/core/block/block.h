@@ -4,13 +4,13 @@
 #include <string>
 #include <vector>
 #include "block_header.h"
-#include "core/transaction/transaction.h"
+//#include "core/transaction/transaction.h"
 
 class Block {
 
 public:
     BlockHeader header;
-    std::vector<TransactionRef> vTx;
+//    std::vector<TransactionRef> vTx;
     mutable bool checked;
 
 public:

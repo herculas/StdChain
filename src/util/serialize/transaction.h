@@ -31,7 +31,6 @@ namespace util::serialize {
         }
         stream << transaction.lockTime;
     }
-
 }
 
 #endif //STDCHAIN_UTIL_SERIALIZE_TRANSACTION_H

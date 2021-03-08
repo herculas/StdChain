@@ -6,13 +6,16 @@
 #include "util/serialize/config.h"
 
 namespace util::serialize {
+
     template<typename T>
-    Blob256
-    serializeHash(const T &obj, int type = util::serialize::SER_GETHASH, int version = config::version::PROTOCOL_VERSION) {
-        HashWriter ss(type, version);
-        ss << obj;
-        return ss.getHash();
+    Blob256 serializeHash(const T &object,
+                          int type = util::serialize::SER_GETHASH,
+                          int version = config::version::PROTOCOL_VERSION) {
+        HashWriter writer(type, version);
+        writer << object;
+        return writer.getHash();
     }
+
 }
 
 #endif //STDCHAIN_UTIL_SERIALIZE_HASH_H
