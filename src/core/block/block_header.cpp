@@ -1,5 +1,10 @@
 #include "block_header.h"
 
+#include <iostream>
+#include <sstream>
+
+#include "util/hash/hash.h"
+
 BlockHeader::BlockHeader(): version(0), time(0), bits(0), nonce(0) {
     this->hashPrevBlock.setNull();
     this->hashMerkleRoot.setNull();
@@ -10,8 +15,14 @@ bool BlockHeader::isNull() const {
 }
 
 Blob256 BlockHeader::getHash() const {
-    // TODO
-    return Blob256();
+    std::stringstream stream;
+    stream << this->version
+           << this->hashPrevBlock.getHex()
+           << this->hashMerkleRoot.getHex()
+           << this->time
+           << this->bits
+           << this->nonce;
+    return sha256(stream.str());
 }
 
 int64_t BlockHeader::getBlockTime() const {

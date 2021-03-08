@@ -15,14 +15,21 @@ include_directories(src)
 
 aux_source_directory(src/core/block CORE_BLOCK)
 aux_source_directory(src/type/blob TYPE_BLOB)
+aux_source_directory(src/util/encode UTIL_ENCODE)
 
 add_executable(
         stdchain
         main.cpp
         ${CORE_BLOCK}
         ${TYPE_BLOB}
+        ${UTIL_ENCODE}
 )
 
-# openssl import
+# import
 find_package(OpenSSL REQUIRED)
-target_link_libraries(stdchain OpenSSL::SSL)
+find_package(Boost 1.75.0 COMPONENTS program_options REQUIRED)
+target_link_libraries(
+        stdchain
+        PUBLIC  OpenSSL::SSL
+                Boost::program_options
+)

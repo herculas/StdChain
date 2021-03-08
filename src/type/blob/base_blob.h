@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-//#include "util/encode/string_encoding.h"
+#include "util/encode/string_encoding.h"
 
 template<unsigned int BITS>
 class BaseBlob {
@@ -72,27 +72,26 @@ bool BaseBlob<BITS>::isNull() const {
 
 template<unsigned int BITS>
 void BaseBlob<BITS>::setHex(const char *psz) {
-    // TODO
-//    memset(this->data, 0, sizeof(this->data));
-//
-//    // trim leading spaces
-//    while (util::encode::isSpace(*psz)) psz++;
-//
-//    // skip 0x
-//    if (psz[0] == '0' && util::encode::toLower(psz[1]) == 'x') psz += 2;
-//
-//    // hex string to blob
-//    size_t digits = 0;
-//    while (util::encode::hexDigit(psz[digits]) != -1) digits++;
-//    auto *p1 = (unsigned char *) this->data;
-//    auto *pEnd = p1 + WIDTH;
-//    while (digits > 0 && p1 < pEnd) {
-//        *p1 = util::encode::hexDigit(psz[--digits]);
-//        if (digits > 0) {
-//            *p1 |= ((unsigned char) util::encode::hexDigit(psz[--digits]) << 4);
-//            p1++;
-//        }
-//    }
+    memset(this->data, 0, sizeof(this->data));
+
+    // trim leading spaces
+    while (util::encode::isSpace(*psz)) psz++;
+
+    // skip 0x
+    if (psz[0] == '0' && util::encode::toLower(psz[1]) == 'x') psz += 2;
+
+    // hex string to blob
+    size_t digits = 0;
+    while (util::encode::hexDigit(psz[digits]) != -1) digits++;
+    auto *p1 = (unsigned char *) this->data;
+    auto *pEnd = p1 + WIDTH;
+    while (digits > 0 && p1 < pEnd) {
+        *p1 = util::encode::hexDigit(psz[--digits]);
+        if (digits > 0) {
+            *p1 |= ((unsigned char) util::encode::hexDigit(psz[--digits]) << 4);
+            p1++;
+        }
+    }
 }
 
 template<unsigned int BITS>
@@ -102,12 +101,10 @@ void BaseBlob<BITS>::setHex(const std::string &str) {
 
 template<unsigned int BITS>
 std::string BaseBlob<BITS>::getHex() const {
-    // TODO
-    return std::string("BaseBlob::getHex");
-//    uint8_t mDataRev[WIDTH];
-//    for (int i = 0; i < WIDTH; ++i)
-//        mDataRev[i] = this->data[WIDTH - i - i];
-//    return util::encode::hexStr(mDataRev);
+    uint8_t mDataRev[WIDTH];
+    for (int i = 0; i < WIDTH; ++i)
+        mDataRev[i] = this->data[WIDTH - i - i];
+    return util::encode::hexStr(mDataRev);
 }
 
 template<unsigned int BITS>
