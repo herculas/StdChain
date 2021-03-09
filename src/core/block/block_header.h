@@ -2,6 +2,8 @@
 #define STDCHAIN_CORE_BLOCK_HEADER_H
 
 #include <vector>
+#include "boost/archive/text_oarchive.hpp"
+#include "boost/archive/text_iarchive.hpp"
 #include "type/blob/blob_256.h"
 
 class BlockHeader {
@@ -20,16 +22,20 @@ public:
     [[nodiscard]] Blob256 getHash() const;
     [[nodiscard]] int64_t getBlockTime() const;
 
-public:
-    template<typename Stream>
-    void serialize(Stream &stream) const;
-
+private:
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &archive, unsigned int archiveVersion);
 };
 
-template<typename Stream>
-void BlockHeader::serialize(Stream &stream) const {
-    // TODO
-    static_assert(std::is_same<const BlockHeader &, decltype(*this)>::value, "serialize type mismatch");
+template<typename Archive>
+void BlockHeader::serialize(Archive &archive, const unsigned int archiveVersion) {
+    archive & this->version;
+    archive & this->hashPrevBlock;
+    archive & this->hashMerkleRoot;
+    archive & this->time;
+    archive & this->bits;
+    archive & this->nonce;
 }
 
 #endif //STDCHAIN_CORE_BLOCK_HEADER_H

@@ -27,9 +27,10 @@ add_executable(
 
 # import
 find_package(OpenSSL REQUIRED)
-find_package(Boost 1.75.0 COMPONENTS program_options REQUIRED)
+find_package(Boost 1.75.0 COMPONENTS program_options serialization REQUIRED)
 target_link_libraries(
         stdchain
         PUBLIC  OpenSSL::SSL
                 Boost::program_options
+                Boost::serialization
 )

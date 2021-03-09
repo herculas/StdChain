@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "util/hash/hash.h"
+#include "util/hash/sha256.h"
 
 BlockHeader::BlockHeader(): version(0), time(0), bits(0), nonce(0) {
     this->hashPrevBlock.setNull();
@@ -22,7 +22,7 @@ Blob256 BlockHeader::getHash() const {
            << this->time
            << this->bits
            << this->nonce;
-    return sha256(stream.str());
+    return util::hash::sha256(stream.str());
 }
 
 int64_t BlockHeader::getBlockTime() const {

@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include "boost/archive/text_iarchive.hpp"
+#include "boost/archive/text_oarchive.hpp"
 #include "util/encode/string_encoding.h"
 
 template<unsigned int BITS>
@@ -33,15 +35,15 @@ public:
     [[nodiscard]] unsigned int size() const;
     [[nodiscard]] uint64_t getUint64(int pos) const;
 
-    template<typename Stream>
-    void serialize(Stream &stream) const;
-    template<typename Stream>
-    void deserialize(Stream &stream);
-
     inline int compare(const BaseBlob &other) const;
     friend inline bool operator==(const BaseBlob &a, const BaseBlob &b) { return a.compare(b) == 0; }
     friend inline bool operator!=(const BaseBlob &a, const BaseBlob &b) { return a.compare(b) != 0; }
     friend inline bool operator<(const BaseBlob &a, const BaseBlob &b) { return a.compare(b) < 0; }
+
+private:
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive& archive, unsigned int archiveVersion);
 };
 
 
@@ -162,20 +164,14 @@ uint64_t BaseBlob<BITS>::getUint64(int pos) const {
 }
 
 template<unsigned int BITS>
-template<typename Stream>
-void BaseBlob<BITS>::serialize(Stream &stream) const {
-    stream.write((char *) this->data, sizeof(this->data));
-}
-
-template<unsigned int BITS>
-template<typename Stream>
-void BaseBlob<BITS>::deserialize(Stream &stream) {
-    stream.read((char *) this->data, sizeof(this->data));
-}
-
-template<unsigned int BITS>
 int BaseBlob<BITS>::compare(const BaseBlob &other) const {
     return memcmp(this->data, other.data, sizeof(this->data));
+}
+
+template<unsigned int BITS>
+template<typename Archive>
+void BaseBlob<BITS>::serialize(Archive &archive, const unsigned int archiveVersion) {
+    archive & this->data;
 }
 
 #endif //STDCHAIN_TYPE_BLOB_BASE_BLOB_H
