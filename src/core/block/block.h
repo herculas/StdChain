@@ -3,8 +3,9 @@
 
 #include <string>
 #include <vector>
+#include "boost/serialization/vector.hpp"
 #include "core/block/block_header.h"
-#include "core/transaction/transaction.h"
+#include "core/transaction/trans_ref.h"
 
 class Block {
 
@@ -18,7 +19,18 @@ public:
     explicit Block(const BlockHeader &header);
     BlockHeader getHeader() const;
     std::string toString() const;
+
+private:
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &archive, unsigned int archiveVersion);
 };
 
+template<typename Archive>
+void Block::serialize(Archive &archive, unsigned int archiveVersion) {
+    archive & this->header;
+    archive & this->vTx;
+    archive & this->checked;
+}
 
 #endif //STDCHAIN_CORE_BLOCK_H

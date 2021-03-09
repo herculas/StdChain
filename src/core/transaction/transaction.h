@@ -47,13 +47,21 @@ public:
     friend bool operator==(const Transaction &a, const Transaction &b);
     friend bool operator!=(const Transaction &a, const Transaction &b);
 
+private:
+    Transaction();
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &archive, unsigned int archiveVersion);
+
 };
 
-typedef std::shared_ptr<const Transaction> TransactionRef;
-
-template<typename Tx>
-static inline TransactionRef makeTransactionRef(Tx &&tx) {
-    return std::make_shared<const Transaction>(std::forward<Tx>(tx));
+template<typename Archive>
+void Transaction::serialize(Archive &archive, unsigned int archiveVersion) {
+    // TODO
+//    archive & this->version;
+//    archive & this->lockTime;
+//    archive & this->hash;
+//    archive & this->witnessHash;
 }
 
 #endif //STDCHAIN_CORE_TRANSACTION_H

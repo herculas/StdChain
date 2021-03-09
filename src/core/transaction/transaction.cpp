@@ -14,6 +14,8 @@ Transaction::Transaction(MutableTransaction &&mTx) : version(mTx.version), lockT
                                                      vout(mTx.vout), hash(this->computeHash()),
                                                      witnessHash(this->computeWitnessHash()) {}
 
+Transaction::Transaction() : version(0), lockTime(0), vin(), vout(), hash(), witnessHash() {}
+
 bool Transaction::isNull() const {
     return this->vin.empty() && this->vout.empty();
 }
