@@ -1,0 +1,6 @@
+#ifndef STDCHAIN_TYPE_BASIC_AMOUNT_H
+#define STDCHAIN_TYPE_BASIC_AMOUNT_H
+
+typedef int64_t Amount;
+
+#endif //STDCHAIN_TYPE_BASIC_AMOUNT_H

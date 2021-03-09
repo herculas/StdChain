@@ -14,6 +14,8 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(src)
 
 aux_source_directory(src/core/block CORE_BLOCK)
+aux_source_directory(src/core/script CORE_SCRIPT)
+aux_source_directory(src/core/transaction CORE_TRANS)
 aux_source_directory(src/type/blob TYPE_BLOB)
 aux_source_directory(src/util/encode UTIL_ENCODE)
 
@@ -21,7 +23,11 @@ add_executable(
         stdchain
         main.cpp
         ${CORE_BLOCK}
+        ${CORE_SCRIPT}
+        ${CORE_TRANS}
+
         ${TYPE_BLOB}
+        
         ${UTIL_ENCODE}
 )
 
