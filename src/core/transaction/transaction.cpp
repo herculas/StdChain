@@ -64,9 +64,8 @@ std::string Transaction::toString() const {
               % this->vin.size()
               % this->vout.size()
               % this->lockTime;
-    for (const auto &in : this->vin) stream << " " << in.toString() << "\n";
-    for (const auto &in : this->vin) stream << " " << in.scriptWitness.toString() << "\n";
-    for (const auto &out : this->vout) stream << " " << out.toString() << "\n";
+    for (const auto &in : this->vin) stream << "\t\t" << in.toString() << "\n";
+    for (const auto &out : this->vout) stream << "\t\t" << out.toString() << "\n";
     return stream.str();
 }
 

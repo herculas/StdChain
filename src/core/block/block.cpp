@@ -26,7 +26,7 @@ std::string Block::toString() const {
             % this->getHeader().bits
             % this->getHeader().nonce
             % this->vTx.size();
-//    for (const auto &tx : this->vTx)
-//        stream << "    " << tx->toString() << "\n";
+    for (const auto &tx : this->vTx)
+        stream << "\t" << tx->toString() << "\n";
     return stream.str();
 }

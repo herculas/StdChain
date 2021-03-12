@@ -25,7 +25,17 @@ public:
     friend bool operator==(const TxOutPoint &a, const TxOutPoint &b);
     friend bool operator!=(const TxOutPoint &a, const TxOutPoint &b);
 
+private:
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &archive, unsigned int archiveVersion);
+
 };
 
+template<typename Archive>
+void TxOutPoint::serialize(Archive &archive, unsigned int archiveVersion) {
+    archive & this->n;
+    archive & this->hash;
+}
 
 #endif //STDCHAIN_CORE_TRANSACTION_OUTPUT_POINT_H

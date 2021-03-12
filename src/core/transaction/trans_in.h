@@ -32,7 +32,19 @@ public:
     friend bool operator==(const TxIn &a, const TxIn &b);
     friend bool operator!=(const TxIn &a, const TxIn &b);
 
+private:
+    TxIn();
+    friend class boost::serialization::access;
+    template<typename Archive>
+    void serialize(Archive &archive, unsigned int archiveVersion);
 };
 
+template<typename Archive>
+void TxIn::serialize(Archive &archive, unsigned int archiveVersion) {
+    archive & this->prevOut;
+    archive & this->sequence;
+    archive & this->scriptSig;
+    archive & this->scriptWitness;
+}
 
 #endif //STDCHAIN_CORE_TRANSACTION_INPUT_H

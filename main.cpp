@@ -18,6 +18,16 @@ int main() {
     header.nonce = 4;
     block.header = header;
 
+    MutableTransaction transaction;
+    transaction.version = 114514;
+    transaction.lockTime = 1919810;
+
+    TxIn txIn(Blob256(), 114);
+    TxOut txOut(514, Script());
+    transaction.vin.push_back(txIn);
+    transaction.vout.push_back(txOut);
+    block.vTx.push_back(makeTransactionRef(transaction));
+
     std::ostringstream outStream;
     boost::archive::text_oarchive outArchive(outStream);
     outArchive << block;
@@ -26,9 +36,7 @@ int main() {
     boost::archive::text_iarchive inArchive(inStream);
     inArchive >> newBlock;
 
-    std::cout << newBlock.checked << std::endl;
-    std::cout << newBlock.header.version << newBlock.header.time << newBlock.header.bits << newBlock.header.nonce
-              << std::endl;
-
+    std::cout << block.toString() << std::endl;
+    std::cout << newBlock.toString() << std::endl;
     return 0;
 }

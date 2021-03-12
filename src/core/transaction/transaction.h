@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "boost/serialization/vector.hpp"
 #include "config/amount.h"
 #include "core/transaction/mutable_trans.h"
 #include "core/transaction/trans_in.h"
@@ -57,11 +58,12 @@ private:
 
 template<typename Archive>
 void Transaction::serialize(Archive &archive, unsigned int archiveVersion) {
-    // TODO
-//    archive & this->version;
-//    archive & this->lockTime;
-//    archive & this->hash;
-//    archive & this->witnessHash;
+    archive & const_cast<int32_t &>(this->version);
+    archive & const_cast<uint32_t &>(this->lockTime);
+    archive & const_cast<std::vector<TxIn> &>(this->vin);
+    archive & const_cast<std::vector<TxOut> &>(this->vout);
+    archive & const_cast<Blob256 &>(this->hash);
+    archive & const_cast<Blob256 &>(this->witnessHash);
 }
 
 #endif //STDCHAIN_CORE_TRANSACTION_H
