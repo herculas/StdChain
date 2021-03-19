@@ -20,7 +20,7 @@ std::string TxIn::toString() const {
         stream << ", coinbase " << util::encode::hexStr(scriptSig);
     else
         stream << ", scriptSig=" << util::encode::hexStr(scriptSig).substr(0, 24);
-    if (this->sequence != TxIn::SEQUENCE_FINAL)
+    if (this->sequence != config::transaction::SEQUENCE_FINAL)
         stream << ", sequence=" << this->sequence;
     stream << ")";
     return stream.str();

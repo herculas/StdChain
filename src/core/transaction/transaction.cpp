@@ -1,10 +1,14 @@
 #include "core/transaction/transaction.h"
 
+#include <algorithm>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include "boost/archive/text_oarchive.hpp"
 #include "boost/format.hpp"
 #include "config/amount.h"
+#include "config/transaction.h"
+#include "util/hash/sha256.h"
 
 Transaction::Transaction(const MutableTransaction &mTx) : version(mTx.version), lockTime(mTx.lockTime), vin(mTx.vin),
                                                           vout(mTx.vout), hash(this->computeHash()),
@@ -28,9 +32,12 @@ const Blob256 &Transaction::getWitnessHash() const {
     return this->witnessHash;
 }
 
-unsigned int Transaction::getTotalSize() const {
-    // TODO: get serialize size
-    return 0;
+uint32_t Transaction::getTotalSize() const {
+    int32_t totalSize = 0;
+    totalSize += sizeof(this->version) + sizeof(this->lockTime);
+    for (const auto &in : this->vin) totalSize += sizeof(in);
+    for (const auto &out: this->vout) totalSize += sizeof(out);
+    return  totalSize;
 }
 
 bool Transaction::isCoinbase() const {
@@ -38,11 +45,9 @@ bool Transaction::isCoinbase() const {
 }
 
 bool Transaction::hasWitness() const {
-    for (const auto &in : this->vin) { // NOLINT(readability-use-anyofallof)
-        if (!in.scriptWitness.isNull())
-            return true;
-    }
-    return false;
+    return std::any_of(this->vin.begin(), this->vin.end(), [](const TxIn &in){
+        return !in.scriptWitness.isNull();
+    });
 }
 
 Amount Transaction::getValueOut() const {
@@ -70,13 +75,22 @@ std::string Transaction::toString() const {
 }
 
 Blob256 Transaction::computeHash() const {
-    // TODO
-    return Blob256();
+    std::stringstream stream;
+    stream << this->version << this->lockTime << config::transaction::SERIALIZE_TRANSACTION_NO_WITNESS;
+    boost::archive::text_oarchive archive(stream);
+    for (const auto &in : this->vin) archive << in;
+    for (const auto &out : this->vout) archive << out;
+    return util::hash::sha256(stream.str());
 }
 
 Blob256 Transaction::computeWitnessHash() const {
-    // TODO
-    return Blob256();
+    if (!this->hasWitness()) return this->computeHash();
+    std::stringstream stream;
+    stream << this->version << this->lockTime << 0;
+    boost::archive::text_oarchive archive(stream);
+    for (const auto &in : this->vin) archive << in;
+    for (const auto &out : this->vout) archive << out;
+    return util::hash::sha256(stream.str());
 }
 
 bool operator==(const Transaction &a, const Transaction &b) {

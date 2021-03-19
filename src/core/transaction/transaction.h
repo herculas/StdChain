@@ -14,9 +14,6 @@
 class Transaction {
 
 public:
-    static const int32_t CURRENT_VERSION = 2;
-
-public:
     const int32_t version;
     const uint32_t lockTime;
     const std::vector<TxIn> vin;
@@ -34,7 +31,7 @@ public:
     [[nodiscard]] const Blob256 &getHash() const;
     [[nodiscard]] const Blob256 &getWitnessHash() const;
 
-    [[nodiscard]] unsigned int getTotalSize() const;
+    [[nodiscard]] uint32_t getTotalSize() const;
     [[nodiscard]] bool isCoinbase() const;
     [[nodiscard]] bool hasWitness() const;
     [[nodiscard]] Amount getValueOut() const;
@@ -52,12 +49,12 @@ private:
     Transaction();
     friend class boost::serialization::access;
     template<typename Archive>
-    void serialize(Archive &archive, unsigned int archiveVersion);
+    void serialize(Archive &archive, uint32_t ver);
 
 };
 
 template<typename Archive>
-void Transaction::serialize(Archive &archive, unsigned int archiveVersion) {
+void Transaction::serialize(Archive &archive, uint32_t ver) {
     archive & const_cast<int32_t &>(this->version);
     archive & const_cast<uint32_t &>(this->lockTime);
     archive & const_cast<std::vector<TxIn> &>(this->vin);

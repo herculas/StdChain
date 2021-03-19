@@ -10,12 +10,12 @@ class Script : public ScriptBase {
 private:
     friend class boost::serialization::access;
     template<typename Archive>
-    void serialize(Archive &archive, unsigned int archiveVersion);
+    void serialize(Archive &archive, uint32_t version);
 
 };
 
 template<typename Archive>
-void Script::serialize(Archive &archive, unsigned int archiveVersion) {
+void Script::serialize(Archive &archive, uint32_t version) {
     archive & boost::serialization::base_object<ScriptBase>(*this);
 }
 

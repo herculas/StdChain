@@ -1,6 +1,8 @@
 #ifndef STDCHAIN_TYPE_BLOB_BASE_BLOB_H
 #define STDCHAIN_TYPE_BLOB_BASE_BLOB_H
 
+#include <iostream>
+
 #include <string>
 #include <vector>
 #include "boost/archive/text_iarchive.hpp"
@@ -43,7 +45,7 @@ public:
 private:
     friend class boost::serialization::access;
     template<typename Archive>
-    void serialize(Archive& archive, unsigned int archiveVersion);
+    void serialize(Archive& archive, unsigned int version);
 };
 
 
@@ -104,8 +106,10 @@ void BaseBlob<BITS>::setHex(const std::string &str) {
 template<unsigned int BITS>
 std::string BaseBlob<BITS>::getHex() const {
     uint8_t mDataRev[WIDTH];
-    for (int i = 0; i < WIDTH; ++i)
-        mDataRev[i] = this->data[WIDTH - i - i];
+    for (int i = 0; i < WIDTH; ++i) {
+        int newIndex = WIDTH - i - 1;
+        mDataRev[i] = this->data[newIndex];
+    }
     return util::encode::hexStr(mDataRev);
 }
 
@@ -170,7 +174,7 @@ int BaseBlob<BITS>::compare(const BaseBlob &other) const {
 
 template<unsigned int BITS>
 template<typename Archive>
-void BaseBlob<BITS>::serialize(Archive &archive, const unsigned int archiveVersion) {
+void BaseBlob<BITS>::serialize(Archive &archive, const unsigned int version) {
     archive & this->data;
 }
 

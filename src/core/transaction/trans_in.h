@@ -4,18 +4,12 @@
 #include <cstdint>
 #include <string>
 
+#include "config/transaction.h"
 #include "core/script/script.h"
 #include "core/script/script_witness.h"
 #include "core/transaction/trans_out_point.h"
 
 class TxIn {
-
-public:
-    static const uint32_t SEQUENCE_FINAL = 0xffffffff;
-    static const uint32_t SEQUENCE_LOCKTIME_DISABLE_FLAG = (1U << 31);
-    static const uint32_t SEQUENCE_LOCKTIME_TYPE_FLAG = (1 << 22);
-    static const uint32_t SEQUENCE_LOCKTIME_MASK = 0x0000ffff;
-    static const uint32_t SEQUENCE_LOCKTIME_GRANULARITY = 9;
 
 public:
     TxOutPoint prevOut;
@@ -24,8 +18,13 @@ public:
     ScriptWitness scriptWitness;
 
 public:
-    explicit TxIn(TxOutPoint prevOut, Script scriptSig = Script(), uint32_t sequence = TxIn::SEQUENCE_FINAL);
-    TxIn(Blob256 hashPrevTx, uint32_t out, Script scriptSig = Script(), uint32_t sequence = TxIn::SEQUENCE_FINAL);
+    explicit TxIn(TxOutPoint prevOut,
+                  Script scriptSig = Script(),
+                  uint32_t sequence = config::transaction::SEQUENCE_FINAL);
+    TxIn(Blob256 hashPrevTx,
+         uint32_t out,
+         Script scriptSig = Script(),
+         uint32_t sequence = config::transaction::SEQUENCE_FINAL);
 
     [[nodiscard]] std::string toString() const;
 
@@ -36,11 +35,11 @@ private:
     TxIn();
     friend class boost::serialization::access;
     template<typename Archive>
-    void serialize(Archive &archive, unsigned int archiveVersion);
+    void serialize(Archive &archive, uint32_t version);
 };
 
 template<typename Archive>
-void TxIn::serialize(Archive &archive, unsigned int archiveVersion) {
+void TxIn::serialize(Archive &archive, uint32_t version) {
     archive & this->prevOut;
     archive & this->sequence;
     archive & this->scriptSig;

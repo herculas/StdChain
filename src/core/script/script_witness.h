@@ -19,12 +19,12 @@ public:
 private:
     friend class boost::serialization::access;
     template<typename Archive>
-    void serialize(Archive &archive, unsigned int archiveVersion);
+    void serialize(Archive &archive, uint32_t version);
 
 };
 
 template<typename Archive>
-void ScriptWitness::serialize(Archive &archive, unsigned int archiveVersion) {
+void ScriptWitness::serialize(Archive &archive, uint32_t version) {
     archive & this->stack;
 }
 

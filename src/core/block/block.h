@@ -23,11 +23,11 @@ public:
 private:
     friend class boost::serialization::access;
     template<typename Archive>
-    void serialize(Archive &archive, unsigned int archiveVersion);
+    void serialize(Archive &archive, uint32_t version);
 };
 
 template<typename Archive>
-void Block::serialize(Archive &archive, unsigned int archiveVersion) {
+void Block::serialize(Archive &archive, uint32_t version) {
     archive & this->header;
     archive & this->vTx;
     archive & this->checked;

@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <sstream>
-
 #include "util/hash/sha256.h"
 
 BlockHeader::BlockHeader(): version(0), time(0), bits(0), nonce(0) {
@@ -25,6 +24,6 @@ Blob256 BlockHeader::getHash() const {
     return util::hash::sha256(stream.str());
 }
 
-int64_t BlockHeader::getBlockTime() const {
+uint32_t BlockHeader::getBlockTime() const {
     return (int64_t) this->time;
 }

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 project(stdchain)
 
-# Conan packages
+# Conan packages setup
 if (EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     conan_basic_setup()
@@ -14,29 +14,26 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(src)
 
 aux_source_directory(src/core/block CORE_BLOCK)
+aux_source_directory(src/core/chain CORE_CHAIN)
 aux_source_directory(src/core/script CORE_SCRIPT)
 aux_source_directory(src/core/transaction CORE_TRANS)
+aux_source_directory(src/type/arith TYPE_ARITH)
 aux_source_directory(src/type/blob TYPE_BLOB)
+aux_source_directory(src/type/file TYPE_FILE)
 aux_source_directory(src/util/encode UTIL_ENCODE)
 
 add_executable(
         stdchain
         main.cpp
         ${CORE_BLOCK}
+        ${CORE_CHAIN}
         ${CORE_SCRIPT}
         ${CORE_TRANS}
-
+        ${TYPE_ARITH}
         ${TYPE_BLOB}
-        
+        ${TYPE_FILE}
         ${UTIL_ENCODE}
 )
 
-# import
-find_package(OpenSSL REQUIRED)
-find_package(Boost 1.75.0 COMPONENTS program_options serialization REQUIRED)
-target_link_libraries(
-        stdchain
-        PUBLIC  OpenSSL::SSL
-                Boost::program_options
-                Boost::serialization
-)
+# link libraries from Conan
+target_link_libraries(stdchain ${CONAN_LIBS})

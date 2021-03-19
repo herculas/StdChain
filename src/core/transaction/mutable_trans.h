@@ -4,6 +4,9 @@
 #include <vector>
 #include "core/transaction/trans_in.h"
 #include "core/transaction/trans_out.h"
+#include "type/blob/blob_256.h"
+
+class Transaction;
 
 class MutableTransaction {
 
@@ -13,6 +16,12 @@ public:
     std::vector<TxIn> vin;
     std::vector<TxOut> vout;
 
+public:
+    MutableTransaction();
+    explicit MutableTransaction(const Transaction &tx);
+
+    [[nodiscard]] Blob256 getHash() const;
+    [[nodiscard]] bool hasWitness() const;
 };
 
 

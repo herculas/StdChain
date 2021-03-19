@@ -4,6 +4,8 @@
 #include "boost/archive/text_oarchive.hpp"
 
 #include "core/block/block.h"
+#include "core/transaction/trans_id_generic.h"
+#include "core/chain/chain.h"
 
 int main() {
 
@@ -38,5 +40,6 @@ int main() {
 
     std::cout << block.toString() << std::endl;
     std::cout << newBlock.toString() << std::endl;
+
     return 0;
 }

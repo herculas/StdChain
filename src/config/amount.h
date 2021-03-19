@@ -1,5 +1,5 @@
-#ifndef STDCHAIN_AMOUNT_H
-#define STDCHAIN_AMOUNT_H
+#ifndef STDCHAIN_CONFIG_AMOUNT_H
+#define STDCHAIN_CONFIG_AMOUNT_H
 
 #include "type/basic/amount.h"
 
@@ -12,4 +12,4 @@ namespace config::amount {
     }
 }
 
-#endif //STDCHAIN_AMOUNT_H
+#endif //STDCHAIN_CONFIG_AMOUNT_H

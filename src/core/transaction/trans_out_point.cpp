@@ -24,7 +24,7 @@ std::string TxOutPoint::toString() const {
 }
 
 bool operator<(const TxOutPoint &a, const TxOutPoint &b) {
-    int cmp = a.hash.compare(b.hash);
+    uint32_t cmp = a.hash.compare(b.hash);
     return cmp < 0 || (cmp == 0 && a.n < b.n);
 }
 

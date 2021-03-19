@@ -8,12 +8,10 @@
 namespace util::hash {
     inline Blob256 sha256(const std::string &str) {
         unsigned char hash[SHA256_DIGEST_LENGTH];
-
         SHA256_CTX context;
         SHA256_Init(&context);
         SHA256_Update(&context, str.c_str(), str.size());
         SHA256_Final(hash, &context);
-
         return Blob256{std::vector<unsigned char>{hash, hash + sizeof(hash) / sizeof(unsigned char)}};
     }
 }

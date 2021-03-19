@@ -15,6 +15,7 @@ public:
     TxOut();
     TxOut(const Amount &value, Script scriptPubKey);
 
+    void setNull();
     [[nodiscard]] bool isNull() const;
     [[nodiscard]] std::string toString() const;
 
@@ -24,12 +25,12 @@ public:
 private:
     friend class boost::serialization::access;
     template<typename Archive>
-    void serialize(Archive &archive, unsigned int archiveVersion);
+    void serialize(Archive &archive, uint32_t version);
 
 };
 
 template<typename Archive>
-void TxOut::serialize(Archive &archive, unsigned int archiveVersion) {
+void TxOut::serialize(Archive &archive, uint32_t version) {
     archive & this->value;
     archive & this->scriptPubKey;
 }

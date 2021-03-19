@@ -14,7 +14,7 @@ bool ScriptWitness::isNull() const {
 
 std::string ScriptWitness::toString() const {
     std::string result = "ScriptWitness(";
-    for (unsigned int i = 0; i < this->stack.size(); ++i) {
+    for (uint32_t i = 0; i < this->stack.size(); ++i) {
         if (i) result += ", ";
         auto s = this->stack[i];
         result += util::encode::hexStr(s);

@@ -20,16 +20,16 @@ public:
     BlockHeader();
     [[nodiscard]] bool isNull() const;
     [[nodiscard]] Blob256 getHash() const;
-    [[nodiscard]] int64_t getBlockTime() const;
+    [[nodiscard]] uint32_t getBlockTime() const;
 
 private:
     friend class boost::serialization::access;
     template<typename Archive>
-    void serialize(Archive &archive, unsigned int archiveVersion);
+    void serialize(Archive &archive, uint32_t ver);
 };
 
 template<typename Archive>
-void BlockHeader::serialize(Archive &archive, const unsigned int archiveVersion) {
+void BlockHeader::serialize(Archive &archive, uint32_t ver) {
     archive & this->version;
     archive & this->hashPrevBlock;
     archive & this->hashMerkleRoot;
