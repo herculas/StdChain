@@ -67,7 +67,7 @@ namespace util::encode {
 
     /** Return the smallest number n such that (x >> n) == 0 (or 64 if the highest bit in x is set. */
     uint64_t static inline CountBits(uint64_t x) {
-        int ret = 0;
+        int32_t ret = 0;
         while (x) {
             x >>= 1;
             ++ret;

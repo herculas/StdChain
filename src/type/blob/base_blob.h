@@ -2,18 +2,17 @@
 #define STDCHAIN_TYPE_BLOB_BASE_BLOB_H
 
 #include <iostream>
-
 #include <string>
 #include <vector>
 #include "boost/archive/text_iarchive.hpp"
 #include "boost/archive/text_oarchive.hpp"
 #include "util/encode/string_encoding.h"
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 class BaseBlob {
 
 protected:
-    static constexpr int WIDTH = BITS / 8;
+    static constexpr int32_t WIDTH = BITS / 8;
     uint8_t data[WIDTH];
 
 public:
@@ -34,10 +33,11 @@ public:
     unsigned char *end();
     [[nodiscard]] const unsigned char *begin() const;
     [[nodiscard]] const unsigned char *end() const;
-    [[nodiscard]] unsigned int size() const;
-    [[nodiscard]] uint64_t getUint64(int pos) const;
+    [[nodiscard]] uint32_t size() const;
+    [[nodiscard]] uint64_t getUint64(int32_t pos) const;
+    inline int32_t compare(const BaseBlob &other) const;
 
-    inline int compare(const BaseBlob &other) const;
+public:
     friend inline bool operator==(const BaseBlob &a, const BaseBlob &b) { return a.compare(b) == 0; }
     friend inline bool operator!=(const BaseBlob &a, const BaseBlob &b) { return a.compare(b) != 0; }
     friend inline bool operator<(const BaseBlob &a, const BaseBlob &b) { return a.compare(b) < 0; }
@@ -45,36 +45,37 @@ public:
 private:
     friend class boost::serialization::access;
     template<typename Archive>
-    void serialize(Archive& archive, unsigned int version);
+    void serialize(Archive& archive, uint32_t version);
+
 };
 
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 BaseBlob<BITS>::BaseBlob(): data{} {}
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 BaseBlob<BITS>::BaseBlob(uint8_t v): data{v} {}
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 BaseBlob<BITS>::BaseBlob(const std::vector<unsigned char> &vch): data{} {
     assert(vch.size() == sizeof(this->data));
     memcpy(this->data, vch.data(), sizeof(this->data));
 }
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 void BaseBlob<BITS>::setNull() {
     memset(this->data, 0, sizeof(this->data));
 }
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 bool BaseBlob<BITS>::isNull() const {
-    for (int i = 0; i < WIDTH; ++i)
+    for (int32_t i = 0; i < WIDTH; ++i)
         if (this->data[i] != 0)
             return false;
     return true;
 }
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 void BaseBlob<BITS>::setHex(const char *psz) {
     memset(this->data, 0, sizeof(this->data));
 
@@ -98,63 +99,63 @@ void BaseBlob<BITS>::setHex(const char *psz) {
     }
 }
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 void BaseBlob<BITS>::setHex(const std::string &str) {
     this->setHex(str.c_str());
 }
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 std::string BaseBlob<BITS>::getHex() const {
     uint8_t mDataRev[WIDTH];
-    for (int i = 0; i < WIDTH; ++i) {
-        int newIndex = WIDTH - i - 1;
+    for (int32_t i = 0; i < WIDTH; ++i) {
+        int32_t newIndex = WIDTH - i - 1;
         mDataRev[i] = this->data[newIndex];
     }
     return util::encode::hexStr(mDataRev);
 }
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 std::string BaseBlob<BITS>::toString() const {
     return this->getHex();
 }
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 const unsigned char *BaseBlob<BITS>::getData() const {
     return this->data;
 }
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 unsigned char *BaseBlob<BITS>::getData() {
     return this->data;
 }
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 unsigned char *BaseBlob<BITS>::begin() {
     return &this->data[0];
 }
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 unsigned char *BaseBlob<BITS>::end() {
     return &this->data[WIDTH];
 }
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 const unsigned char *BaseBlob<BITS>::begin() const {
     return &this->data[0];
 }
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 const unsigned char *BaseBlob<BITS>::end() const {
     return &this->data[WIDTH];
 }
 
-template<unsigned int BITS>
-unsigned int BaseBlob<BITS>::size() const {
+template<uint32_t BITS>
+uint32_t BaseBlob<BITS>::size() const {
     return sizeof(this->data);
 }
 
-template<unsigned int BITS>
-uint64_t BaseBlob<BITS>::getUint64(int pos) const {
+template<uint32_t BITS>
+uint64_t BaseBlob<BITS>::getUint64(int32_t pos) const {
     const uint8_t *ptr = this->data + pos * 8;
     return
         ((uint64_t)ptr[0]) | \
@@ -167,14 +168,14 @@ uint64_t BaseBlob<BITS>::getUint64(int pos) const {
         ((uint64_t)ptr[7]) << 56;
 }
 
-template<unsigned int BITS>
-int BaseBlob<BITS>::compare(const BaseBlob &other) const {
+template<uint32_t BITS>
+int32_t BaseBlob<BITS>::compare(const BaseBlob &other) const {
     return memcmp(this->data, other.data, sizeof(this->data));
 }
 
-template<unsigned int BITS>
+template<uint32_t BITS>
 template<typename Archive>
-void BaseBlob<BITS>::serialize(Archive &archive, const unsigned int version) {
+void BaseBlob<BITS>::serialize(Archive &archive, const uint32_t version) {
     archive & this->data;
 }
 

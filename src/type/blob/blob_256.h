@@ -15,11 +15,11 @@ public:
 private:
     friend class boost::serialization::access;
     template<typename Archive>
-    void serialize(Archive &archive, unsigned int version);
+    void serialize(Archive &archive, uint32_t version);
 };
 
 template<typename Archive>
-void Blob256::serialize(Archive &archive, const unsigned int version) {
+void Blob256::serialize(Archive &archive, const uint32_t version) {
     archive & boost::serialization::base_object<BaseBlob<256>>(*this);
 }
 

@@ -79,12 +79,12 @@ int64_t BlockIndex::getBlockTimeMax() const {
 }
 
 int64_t BlockIndex::getMedianTimePast() const {
-    const int MEDIAN_TIME_SPAN = 11;
+    const int32_t MEDIAN_TIME_SPAN = 11;
     int64_t median[MEDIAN_TIME_SPAN];
     int64_t *begin = &median[MEDIAN_TIME_SPAN];
     int64_t *end = &median[MEDIAN_TIME_SPAN];
     const BlockIndex *index = this;
-    for (int i = 0; i < MEDIAN_TIME_SPAN && index; i++, index = index->prevBlock) {
+    for (int32_t i = 0; i < MEDIAN_TIME_SPAN && index; i++, index = index->prevBlock) {
         *(--begin) = index->getBlockTime();
     }
     std::sort(begin, end);
@@ -95,8 +95,8 @@ int32_t invertLowestOne(int32_t n) {
     return n & (n - 1);
 }
 
-int32_t getSkipHeight(int height) {
-    if (height < 2)return 0;
+int32_t getSkipHeight(int32_t height) {
+    if (height < 2) return 0;
     return (height & 1) ? invertLowestOne(invertLowestOne(height - 1)) + 1 : invertLowestOne(height);
 }
 
@@ -113,10 +113,10 @@ const BlockIndex *BlockIndex::getAncestor(int32_t ancHeight) const {
     if (ancHeight > this->height || ancHeight < 0)
         return nullptr;
     const BlockIndex *indexWalk = this;
-    int heightWalk = this->height;
+    int32_t heightWalk = this->height;
     while (heightWalk > ancHeight) {
-        int heightSkip = getSkipHeight(heightWalk);
-        int heightSkipPrev = getSkipHeight(heightWalk - 1);
+        int32_t heightSkip = getSkipHeight(heightWalk);
+        int32_t heightSkipPrev = getSkipHeight(heightWalk - 1);
         if (indexWalk->skipBlock != nullptr && (heightSkip == ancHeight || (heightSkip > ancHeight &&
                                                                             !(heightSkipPrev < heightSkip - 2 &&
                                                                               heightSkipPrev >= ancHeight)))) {

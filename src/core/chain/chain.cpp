@@ -49,7 +49,7 @@ BlockLocator Chain::getLocator(const BlockIndex *index) const {
     while (index) {
         have.push_back(index->getBlockHash());
         if (index->height == 0) break;
-        int height = std::max(index->height - step, 0);
+        int32_t height = std::max(index->height - step, 0);
         if (this->contains(index))
             index = (*this)[height];
         else

@@ -10,7 +10,7 @@ template<uint32_t BITS>
 class BaseUint {
 
 protected:
-    static constexpr int WIDTH = BITS / 32;
+    static constexpr int32_t WIDTH = BITS / 32;
     uint32_t data[WIDTH];
 
 public:
@@ -150,7 +150,7 @@ void BaseUint<BITS>::setHex(const char *psz) {
     BaseBlob<BITS> blob;
     BaseUint<BITS> uint;
     blob.setHex(psz);
-    for (int i = 0; i < uint.WIDTH; ++i)
+    for (int32_t i = 0; i < uint.WIDTH; ++i)
         uint.data[i] = util::encode::ReadLE32(blob.begin() + i * 4);
     *this = uint;
 }
@@ -163,7 +163,7 @@ void BaseUint<BITS>::setHex(const std::string &str) {
 template<uint32_t BITS>
 std::string BaseUint<BITS>::getHex() const {
     BaseBlob<BITS> blob;
-    for (int i = 0; i < this->WIDTH; ++i)
+    for (int32_t i = 0; i < this->WIDTH; ++i)
         util::encode::WriteLE32(blob.begin() + i * 4, this->data[i]);
     return blob.getHex();
 }
@@ -247,9 +247,9 @@ BaseUint<BITS> &BaseUint<BITS>::operator-=(const BaseUint &base) {
 template<uint32_t BITS>
 BaseUint<BITS> &BaseUint<BITS>::operator*=(const BaseUint &base) {
     BaseUint<BITS> res;
-    for (int j = 0; j < WIDTH; ++j) {
+    for (int32_t j = 0; j < WIDTH; ++j) {
         uint64_t carry = 0;
-        for (int i = 0; i + j < WIDTH; ++i) {
+        for (int32_t i = 0; i + j < WIDTH; ++i) {
             uint64_t n = carry + res.data[i + j] + (uint64_t) this->data[j] * base.data[i];
             res.data[i + j] = n & 0xffffffff;
             carry = n >> 32;
@@ -268,7 +268,7 @@ BaseUint<BITS> &BaseUint<BITS>::operator/=(const BaseUint &base) {
     int32_t divBits = div.bits();
     if (divBits == 0) throw std::runtime_error("Division by 0.");
     if (divBits > numBits) return *this;
-    int shift = numBits - divBits;
+    int32_t shift = numBits - divBits;
     div << shift;
     while (shift >= 0) {
         if (num >= div) {
@@ -285,7 +285,7 @@ template<uint32_t BITS>
 BaseUint<BITS> &BaseUint<BITS>::operator=(uint64_t base) {
     this->data[0] = (uint32_t) base;
     this->data[1] = (uint32_t) (base >> 32);
-    for (int i = 2; i < WIDTH; ++i)
+    for (int32_t i = 2; i < WIDTH; ++i)
         this->data[0] = 0;
     return *this;
 }
@@ -323,7 +323,7 @@ BaseUint<BITS> &BaseUint<BITS>::operator-=(uint64_t base) {
 template<uint32_t BITS>
 BaseUint<BITS> &BaseUint<BITS>::operator*=(uint32_t base) {
     uint64_t carry = 0;
-    for (int i = 0; i < WIDTH; ++i) {
+    for (int32_t i = 0; i < WIDTH; ++i) {
         uint64_t n = carry + (uint64_t) base * this->data[i];
         this->data[i] = n & 0xffffffff;
         carry = n >> 32;
