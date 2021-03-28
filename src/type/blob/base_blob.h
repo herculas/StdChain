@@ -1,7 +1,6 @@
 #ifndef STDCHAIN_TYPE_BLOB_BASE_BLOB_H
 #define STDCHAIN_TYPE_BLOB_BASE_BLOB_H
 
-#include <iostream>
 #include <string>
 #include <vector>
 #include "boost/archive/text_iarchive.hpp"

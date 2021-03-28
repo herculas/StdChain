@@ -4,8 +4,8 @@
 #include "boost/archive/text_oarchive.hpp"
 
 #include "core/block/block.h"
-#include "core/transaction/trans_id_generic.h"
-#include "core/chain/chain.h"
+#include "core/coin/coin_view_backed.h"
+#include "core/coin/coin_view_cache.h"
 
 int main() {
 
