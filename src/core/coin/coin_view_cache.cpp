@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <type_traits>
 #include <tuple>
+#include "util/memory/memory_usage.h"
 
 CoinViewCache::CoinViewCache(CoinView *base) : CoinViewBacked(base), cachedCoinsUsage{0} {}
 
@@ -79,7 +80,24 @@ const Coin &CoinViewCache::accessCoin(const TxOutPoint &outPoint) const {
 
 void CoinViewCache::addCoin(const TxOutPoint &outPoint, Coin &&coin, bool possibleOverwrite) {
     assert(!coin.isSpent());
-    // TODO: scruptkey
+    if (coin.out.scriptPubKey.isUnspendable()) return;
+    CoinMap::iterator iter;
+    bool inserted;
+    std::tie(iter, inserted) = this->cacheCoins.emplace(std::piecewise_construct,
+                                                        std::forward_as_tuple(outPoint),
+                                                        std::tuple<>());
+    bool fresh = false;
+    if (!inserted)
+        this->cachedCoinsUsage -= iter->second.coin.dynamicMemoryUsage();
+    if (!possibleOverwrite) {
+        if (!iter->second.coin.isSpent())
+            throw std::logic_error(
+                    "CoinViewCache::addCoin: Attempt to overwrite an unspent coin (when possibleOverwrite is false)");
+        fresh = !(iter->second.flag & CoinCacheEntry::DIRTY);
+    }
+    iter->second.coin = std::move(coin);
+    iter->second.flag |= CoinCacheEntry::DIRTY | (fresh ? CoinCacheEntry::FRESH : 0);
+    this->cachedCoinsUsage += iter->second.coin.dynamicMemoryUsage();
 }
 
 void CoinViewCache::emplaceCoinInternalDanger(TxOutPoint &&outPoint, Coin &&coin) {
@@ -126,8 +144,7 @@ uint32_t CoinViewCache::getCacheSize() const {
 }
 
 size_t CoinViewCache::dynamicMemoryUsage() const {
-    // TODO: memusage
-    return 0;
+    return util::memory::dynamicUsage(this->cacheCoins) + this->cachedCoinsUsage;
 }
 
 bool CoinViewCache::haveInputs(const Transaction &transaction) const {

@@ -1,6 +1,7 @@
 #include "core/coin/coin.h"
 
 #include <type_traits>
+#include "util/memory/memory_usage.h"
 
 Coin::Coin() : coinbase{false}, height{0} {}
 Coin::Coin(TxOut &&out, uint32_t height, bool coinbase) : out{out}, coinbase{coinbase}, height{height} {}
@@ -21,6 +22,5 @@ bool Coin::isSpent() const {
 }
 
 size_t Coin::dynamicMemoryUsage() const {
-    // TODO: mem_usage
-    return 0;
+    return util::memory::dynamicUsage(this->out.scriptPubKey);
 }

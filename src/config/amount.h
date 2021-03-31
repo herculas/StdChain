@@ -10,6 +10,6 @@ namespace config::amount {
     inline bool moneyRange(const Amount &value) {
         return value >= 0 && value <= MAX_MONEY;
     }
-}
+} // namespace config::amount
 
 #endif //STDCHAIN_CONFIG_AMOUNT_H
